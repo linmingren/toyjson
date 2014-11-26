@@ -3,6 +3,7 @@ package me.linmingren.toyjson;
 import java.io.IOException;
 import java.io.StringReader;
 
+
 public class JsonParser {
     StringReader strReader;
 	StringBuffer readedString; //已经处理过的字符串，当出现异常时打印出来
@@ -180,7 +181,7 @@ public class JsonParser {
 		return node;
 	}
 	
-	public JsonNode parseArray() throws JsonException {
+	private JsonNode parseArray() throws JsonException {
 		ArrayNode o = new ArrayNode();
 
 		// 处理[
@@ -202,7 +203,7 @@ public class JsonParser {
 		return o;
 	}
 	
-	public ObjectNode parseObject() throws JsonException {
+	private ObjectNode parseObject() throws JsonException {
 		ObjectNode o = new ObjectNode();
 		
 		//处理{
@@ -224,5 +225,31 @@ public class JsonParser {
 		//处理}
 		endObject();
 		return o;
+	}
+	
+	public JsonNode parse() throws JsonException {
+		JsonNode node = null;
+        
+		if (ch == '{') {
+			node = parseObject();
+		} else if (ch == '[') {
+			node = parseArray();
+		}
+
+        //必须已经结束，如果有非空字符则异常
+		while (ch > 0) {
+			if (!this.isBlankCharacter(ch)) {
+				throw new JsonException("字符串带有多余字符");
+			}
+			
+			ch = this.nextCharacter();
+		}
+        
+        if(node == null)
+        {
+            throw new JsonException("无法解析字符串");
+        }
+        
+        return node;
 	}
 }
