@@ -1,0 +1,12 @@
+package me.linmingren.toyjson;
+
+public class JsonException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public JsonException(String msg) {
+		super(msg);
+	}
+}
